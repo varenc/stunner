@@ -17,8 +17,8 @@
 
 ╭──────────────────────────────────────────────────────────────────────╮
 │                                                                      │
-│  Server: stun.l.google.com:19302                                     │
-│  Port: 53309                                                         │
+│  Server: derp25d.tailscale.com:3478                                  │
+│  Port: 29752                                                         │
 │  IP Address: <omitted>                                               │
 │  Port Mapping: None                                                  │
 │                                                                      │
@@ -26,8 +26,8 @@
 
 ╭──────────────────────────────────────────────────────────────────────╮
 │                                                                      │
-│  Server: stun1.l.google.com:19302                                    │
-│  Port: 53309                                                         │
+│  Server: derp3f.tailscale.com:3478                                   │
+│  Port: 5702                                                          │
 │  IP Address: <omitted>                                               │
 │  Port Mapping: None                                                  │
 │                                                                      │
