@@ -10,20 +10,47 @@
 - **Dynamic DERP Fetching**: If no STUN servers are specified, Stunner can fetch the Tailscale DERP map from `https://login.tailscale.com/derpmap/default` and pick two random servers automatically.
 - **NAT Classification**: Provides an overall NAT result, labeling it “Open Internet,” “Full Cone,” “Symmetric NAT,” etc., plus an “Easy” or “Hard” rating for hole punching.
 - **Verbose Debug Logging**: An optional `--debug` flag emits debug logs akin to `pystun3`, letting you trace each request/response.
-- **Tabular Output**: Results are displayed in tables for easy reading, e.g.:
+- **Card Output**: Results are displayed as cards for easy reading, e.g.:
 
-```bash
-+----------------------------+-------+-----------+---------+
-|        STUN SERVER         | PORT  |    IP     | MAPPING |
-+----------------------------+-------+-----------+---------+
-| derp3d.tailscale.com:3478  | 62236 | <omitted> | UPnP    |
-| derp13b.tailscale.com:3478 | 62236 | <omitted> | UPnP    |
-+----------------------------+-------+-----------+---------+
-+--------+------------------------------+-----------+-------------------------------+
-| RESULT |           NAT TYPE           | EASY/HARD |            DETAIL             |
-+--------+------------------------------+-----------+-------------------------------+
-| Final  | Endpoint-Independent Mapping | Easy      | Endpoint-Independent Mapping. |
-+--------+------------------------------+-----------+-------------------------------+
+```text
+ 🌐 STUN Results
+
+╭──────────────────────────────────────────────────────────────────────╮
+│                                                                      │
+│  Server: stun.l.google.com:19302                                     │
+│  Port: 53309                                                         │
+│  IP Address: <omitted>                                               │
+│  Port Mapping: None                                                  │
+│                                                                      │
+╰──────────────────────────────────────────────────────────────────────╯
+
+╭──────────────────────────────────────────────────────────────────────╮
+│                                                                      │
+│  Server: stun1.l.google.com:19302                                    │
+│  Port: 53309                                                         │
+│  IP Address: <omitted>                                               │
+│  Port Mapping: None                                                  │
+│                                                                      │
+╰──────────────────────────────────────────────────────────────────────╯
+
+ 🔍 NAT Type Detection
+
+╭──────────────────────────────────────────────────────────────────────╮
+│                                                                      │
+│  NAT Type: Address-Dependent Mapping                                 │
+│                                                                      │
+│  Difficulty: ✅ Easy                                                 │
+│                                                                      │
+│  Direct Connections: Easy NAT + No NAT devices                       │
+│                                                                      │
+│  Description:                                                        │
+│  Uses one public port for each remote IP. Inbound connections must   │
+│  come from that IP.                                                  │
+│                                                                      │
+│  Status: 🎉 Great! The NAT you're behind should allow direct         │
+│  connections for many connections.                                   │
+│                                                                      │
+╰──────────────────────────────────────────────────────────────────────╯
 ```
 
 ## Installation
@@ -63,16 +90,21 @@ You can run `go env | grep "GOPATH"` to double check where go considers the `GOP
 ```bash
 Usage: stunner [flags]
 
+A CLI tool to check your NAT Type
+
 Flags:
-  -h, --help                                                          Show context-sensitive help.
-      --stun-server=STUN-SERVER,...                                   STUN servers to use for detection
-      --stun-port=3478                                                STUN port to use for detection
-      --source-ip="0.0.0.0"                                           Local IP to bind
-      --source-port=INT                                               Local port to bind
-      --debug                                                         Enable debug logging
-      --software="tailnode"                                           Software to send for STUN request
-      --derp-map-url="https://login.tailscale.com/derpmap/default"    URL to fetch DERP map from
-      --version                                                       Show version
+  -h, --help                   Show context-sensitive help.
+  -s, --stun-server=STUN-SERVER,...
+                               STUN servers to use for detection
+  -p, --stun-port=3478         STUN port to use for detection
+  -i, --source-ip="0.0.0.0"    Local IP to bind
+  -P, --source-port=INT        Local port to bind
+  -d, --debug                  Enable debug logging
+  -S, --software="tailnode"    Software to send for STUN request
+      --derp-map-url="https://login.tailscale.com/derpmap/default"
+                               URL to fetch DERP map from
+      --version                Show version
+  -o, --no-ip                  Omit IP addresses in output
 ```
 
 ### Common Flags
@@ -82,7 +114,8 @@ Flags:
 - **`--source-ip <IP>`** / **`--source-port <port>`**: Local interface IP and port to bind the UDP socket (defaults to `0.0.0.0:54320`).
 - **`--debug`**: Enable debug logging, showing STUN transactions and responses.
 - **`--software <name>`**: Customize the SOFTWARE attribute in your STUN Binding Request (defaults to `tailnode`).
-- **`--derpmapurl <URL>`**: Where to fetch the DERP map JSON if no STUN servers are specified (defaults to `https://login.tailscale.com/derpmap/default`).
+- **`--derp-map-url <URL>`**: Where to fetch the DERP map JSON if no STUN servers are specified (defaults to `https://login.tailscale.com/derpmap/default`).
+- **`--no-ip`**: Omit external IP addresses from the output (they are shown as `<omitted>`).
 
 ### Example
 
